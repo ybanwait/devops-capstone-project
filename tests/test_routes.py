@@ -9,7 +9,7 @@ import os
 import logging
 from unittest import TestCase
 from tests.factories import AccountFactory
-from service.common import status  # HTTP Status Codes
+from service.common import status, error_handlers  # HTTP Status Codes
 from service.models import db, Account, init_db
 from service.routes import app
 
@@ -123,4 +123,28 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
+    def test_not_found(self):
+        """It should return 404 when resource is not found"""
+        error="testing"
+        response=error_handlers.not_found(error)
+        self.assertEqual(response[1], 404)
+
+    def test_method_not_supported(self):
+        """It should return 405 when unsupported HTTP methods is used"""    
+        error="testing"
+        response=error_handlers.method_not_supported(error)
+        self.assertEqual(response[1], 405)
+
     # ADD YOUR TEST CASES HERE ...
+    def test_read_an_account(self):
+        """It should be able to read a single account"""
+        account = self._create_accounts(1)[0]
+        response = self.client.get(
+            f"{BASE_URL}/{account.id}",
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data=response.get_json()
+        self.assertEqual(data["name"], account.name)
+
+        
