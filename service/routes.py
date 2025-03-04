@@ -126,6 +126,7 @@ def delete_account(account_id):
     Delete an account
     This endpoint should delete an account
     """
+    app.logger.info("Request to delete an account with id: %s", account_id)
     account=Account.find(account_id)
     if account:
         account.delete()
