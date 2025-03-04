@@ -105,12 +105,13 @@ def update_account(account_id):
     Update existing account
     This endpoint will update an existing account
     """
+    app.logger.info("This endpoint will delete an account with id: %s", account_id)
     account = Account.find(account_id)
     if not account:
         abort(status.HTTP_404_NOT_FOUND, f"account with id [{account_id}] could not be found")
     account.deserialize(request.get_json())
     account.update()
-    return account.serialize(), HTTP_200_OK
+    return account.serialize(), status.HTTP_200_OK
 
 
 
@@ -119,7 +120,17 @@ def update_account(account_id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
+@app.route("/accounts/<int:account_id>", methods=["DELETE"])
+def delete_account(account_id):
+    """
+    Delete an account
+    This endpoint should delete an account
+    """
+    account=Account.find(account_id)
+    if account:
+        account.delete()
 
+    return "", status.HTTP_204_NO_CONTENT    
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
