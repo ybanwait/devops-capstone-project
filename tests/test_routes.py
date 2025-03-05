@@ -125,8 +125,8 @@ class TestAccountService(TestCase):
 
     def test_not_found(self):
         """It should return 404 when resource is not found"""
-        error="testing"
-        response=error_handlers.not_found(error)
+        error = "testing"
+        response = error_handlers.not_found(error)
         self.assertEqual(response[1], 404)
 
     def test_method_not_allowed(self):
@@ -135,7 +135,6 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     # ADD YOUR TEST CASES HERE ...
-    
     def test_list_all_accounts(self):
         """It should list all accounts"""
         self._create_accounts(5)
@@ -143,7 +142,6 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
-
 
     def test_read_an_account(self):
         """It should be able to read a single account"""
@@ -153,13 +151,13 @@ class TestAccountService(TestCase):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data=response.get_json()
+        data = response.get_json()
         self.assertEqual(data["name"], account.name)
 
     def test_update_account(self):
         """It should update an existing account"""
         # create an account to update
-        test_account=AccountFactory()
+        test_account = AccountFactory()
         response = self.client.post(
             BASE_URL,
             json=test_account.serialize(),
@@ -172,17 +170,17 @@ class TestAccountService(TestCase):
         resp = self.client.put(
             f"{BASE_URL}/{new_account['id']}",
             json=new_account,
-            content_type="application/json"       
+            content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data=resp.get_json()
+        data = resp.get_json()
         self.assertEqual(data["name"], "testing")
 
     def test_delete_account(self):
         """It should delete an account"""
         # create an account
-        account=self._create_accounts(1)[0]
-        response=self.client.delete(
+        account = self._create_accounts(1)[0]
+        response = self.client.delete(
             f"{BASE_URL}/{account.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
