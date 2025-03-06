@@ -125,7 +125,10 @@ class TestAccountService(TestCase):
             json=account.serialize(),
             content_type="test/html"
         )
-        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+        )
 
     def test_not_found(self):
         """It should return 404 when resource is not found"""
@@ -196,7 +199,8 @@ class TestAccountService(TestCase):
         headers = {
             'X-Frame-Options': 'SAMEORIGIN',
             'X-Content-Type-Options': 'nosniff',
-            'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
+            'Content-Security-Policy': """default-src \'self\';
+            object-src \'none\'""",
             'Referrer-Policy': 'strict-origin-when-cross-origin'
         }
 
@@ -208,5 +212,7 @@ class TestAccountService(TestCase):
         response = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # check for the CORS header
-        self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
-        
+        self.assertEqual(
+            response.headers.get('Access-Control-Allow-Origin'),
+            '*'
+        )
