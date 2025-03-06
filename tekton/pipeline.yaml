@@ -54,9 +54,9 @@ spec:
     - name: tests
       workspaces:
         - name: source
-          workspace: nose          
+          workspace: pipeline-workspace          
       taskRef:
-        name: flake8
+        name: nose
       params:
       - name: database_uri
         value: "sqlite:////test.db"
